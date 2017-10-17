@@ -1,3 +1,11 @@
+FROM golang:1.9 AS builder
+ENV GOOS=linux \
+    GOARCH=amd64 \
+    CGO_ENABLED=0
+WORKDIR /go/src/github.com/drone-plugins/drone-downstream
+COPY . .
+RUN go build -v -ldflags "-X main.build=100500" -a -o /release/linux/amd64/drone-downstream
+
 FROM plugins/base:multiarch
 MAINTAINER Drone.IO Community <drone-dev@googlegroups.com>
 
@@ -7,5 +15,5 @@ LABEL org.label-schema.name="Drone Downstream"
 LABEL org.label-schema.vendor="Drone.IO Community"
 LABEL org.label-schema.schema-version="1.0"
 
-ADD release/linux/amd64/drone-downstream /bin/
+COPY --from=builder release/linux/amd64/drone-downstream /bin/
 ENTRYPOINT ["/bin/drone-downstream"]
