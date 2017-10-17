@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/drone/drone-go/drone"
 )
 
@@ -54,6 +55,7 @@ func (p *Plugin) Exec() error {
 				// get the latest build for the specified repository
 				build, err := client.BuildLast(owner, name, branch)
 				if err != nil {
+					spew.Dump(err)
 					return fmt.Errorf("Error: unable to get latest build for %s.\n", entry)
 				}
 				if (build.Status != drone.StatusRunning && build.Status != drone.StatusPending) || p.Wait == false {
