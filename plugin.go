@@ -156,7 +156,7 @@ func (p *Plugin) Exec() error {
 				}
 
 				// get the latest build for the specified repository
-				build, err := client.BuildLast(owner, name, branch)
+				build, err := client.BuildLast(owner, name, branch + "&ref=refs/heads/" + branch)
 				if err != nil {
 					if waiting {
 						continue
